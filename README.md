@@ -1,58 +1,89 @@
 # claude-ai-agents
-HMZ's production agent roster — autonomous Claude agents for marketing, lead gen, and agency ops
 
-![DigiMinds](https://img.shields.io/badge/DigiMinds-Agency_OS-6C3EE8?style=flat&labelColor=000) ![Claude](https://img.shields.io/badge/Claude-Sonnet_4.6-orange?style=flat&labelColor=555) ![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat&labelColor=555) ![Agents](https://img.shields.io/badge/agents-50%2B-blue?style=flat&labelColor=555)
+![Agents](https://img.shields.io/badge/DigiMinds-Agent_Roster-E74C3C?style=flat&labelColor=000) ![Paperclip](https://img.shields.io/badge/Paperclip_AI-CEO_control_plane-blue?style=flat&labelColor=555) ![Count](https://img.shields.io/badge/agents-50_deployed-orange?style=flat&labelColor=555) ![Status](https://img.shields.io/badge/status-autonomous_24%2F7-green?style=flat&labelColor=555)
 
-Part of the [HMZ AI Infrastructure](https://github.com/hmzainjamil) stack — the agent layer powering DigiMinds (digiminds.org) autonomously.
+DigiMinds production agent roster — 50 autonomous Claude agents managed by Paperclip AI at `http://127.0.0.1:3100`. Organized across 8 divisions, each with defined role, specialization, and assigned KPI targets. These agents don't wait for instructions — they execute, monitor, and self-correct.
 
----
+## 🧠 ORG STRUCTURE
 
-## 🧠 ARCHITECTURE
+Paperclip AI is the CEO. HMZ (Zulqarnain) is the board — final authority, never replaced.
 
-| Layer | Component | Role |
-|-------|-----------|------|
-| Orchestration | Paperclip AI CEO | Routes tasks, monitors KPIs, self-improves every 6h |
-| Execution | Scheduled Agents | Lead gen, content, intel, KPI monitor — 24/7 |
-| Memory | `~/.claude/projects/memory/` | Cross-session persistence |
-| Tools | MCP Servers + Skills | Apollo, Vibe Prospecting, Apify, Gmail, Notion |
-| Infrastructure | LaunchAgent `ai.hmz.paperclip` | Always-on, auto-restarts |
+```
+Board: HMZ (Zulqarnain) — irreplaceable founder
+CEO: Paperclip AI — full operational authority, 24/7
 
-## ⚙️ AGENT ROSTER
+Division Heads (8 roles × agents)
+├── CMO Division      → BDM, content, social, email, brand
+├── CTO Division      → engineering, DevOps, QA, security, infra
+├── CFO Division      → finance, billing, forecasting, cost optimization
+├── PM Division       → project management, client success, onboarding
+├── Research Division → competitor intel, trend scanning, market analysis
+├── Security Division → audit, compliance, vulnerability monitoring
+├── Design Division   → creative, brand assets, ad creatives
+└── General Division  → overflow, multi-task, support
+```
 
-| Division | Agents | Specialization |
-|----------|--------|----------------|
-| C-Suite | CFO, CMO, CTO, CSO | P&L, brand, tech stack, security |
-| Engineering | 6 agents | Full-stack, AI/ML, backend, frontend, DevOps x2 |
-| Marketing | 6 agents | Creative director, performance creative, SEO, content, copywriter |
-| Sales/BDM | 4 agents | BDM lead, AE, lead researcher, partnership manager |
-| Client Services | 4 agents | PM x2, QA lead, campaign QA |
-| Paid Media | 4 agents | Google Ads, Meta Ads, programmatic, analytics |
-| Operations | 4 agents | Ops manager, finance ops, legal, HR |
-| AI R&D | 4 agents | AI research, prompt engineer, MCP engineer, competitive intel |
-| Growth | 4 agents | Growth hacker, email, paid social, community |
+## ⚙️ AGENT CONFIGURATION
 
-## 💡 AUTONOMOUS LOOPS
+**Paperclip API** — `http://127.0.0.1:3100/api`
+**Company ID** — `c5066522-bacc-4a28-b700-6590cbe366ec`
 
-■ **Scheduled Tasks (6 always-running)**
+```bash
+# List all agents
+curl http://127.0.0.1:3100/api/agents | jq '.[] | {name, role, status}'
 
-| Task ID | Schedule | What it does |
-|---------|----------|--------------|
-| `paperclip-ceo-autonomous-loop` | Every 6h | Web intel → create tasks → hire new agents if skill gap |
-| `paperclip-lead-enrichment-engine` | 7:30 AM daily | 10+ leads sourced, scored, enriched → outreach drafted |
-| `paperclip-linkedin-content-engine` | 8:00 AM daily | 1 trending post generated → saved to ~/Downloads |
-| `paperclip-competitor-intel-engine` | 10:00 AM daily | Competitor pricing, positioning, gaps logged |
-| `paperclip-kpi-health-monitor` | 6:00 PM daily | KPI audit → corrective tasks for any miss |
-| `paperclip-market-trends-scanner` | 6 AM Mon/Wed/Fri | Global AI + marketing trends → opportunity tasks |
+# Create agent
+curl -X POST http://127.0.0.1:3100/api/agents   -H "Content-Type: application/json"   -d '{
+    "name": "Lead Qualifier",
+    "role": "researcher",
+    "companyId": "c5066522-bacc-4a28-b700-6590cbe366ec",
+    "systemPrompt": "You are a B2B lead qualification specialist..."
+  }'
 
-## ☠️ WHAT THIS REPLACES
+# Assign task to agent
+curl -X POST http://127.0.0.1:3100/api/tasks   -d '{"agentId": "<id>", "title": "Qualify 10 leads from today sweep", "priority": "high"}'
+```
 
-| Manual Task | Agent |
-|-------------|-------|
-| Daily lead research | `paperclip-lead-enrichment-engine` |
-| LinkedIn content | `paperclip-linkedin-content-engine` |
-| Competitor monitoring | `paperclip-competitor-intel-engine` |
-| KPI tracking | `paperclip-kpi-health-monitor` |
-| Market research | `paperclip-market-trends-scanner` |
+## 💡 DIVISION BREAKDOWN
 
----
-Built by [HMZ](https://github.com/hmzainjamil) · [DigiMinds](https://digiminds.org) · Operated by Paperclip AI CEO
+| Division | Agents | KPIs Owned |
+|---|---|---|
+| BDM / Sales | Lead Qualifier, Outreach Specialist, Proposal Writer, Pipeline Analyst | Leads/week, conversion %, MRR growth |
+| Paid Media | Google Ads Manager, Meta Ads Manager, Creative Tester, Analytics Reporter | ROAS ≥3x, CPA ≤$50, CTR ≥2% |
+| Content | LinkedIn Publisher, Blog Writer, Email Marketer, Social Monitor | Posts/week, engagement %, open rate |
+| Engineering | Code Reviewer, API Builder, Bug Fixer, DevOps | Uptime 99.9%, deploy frequency |
+| Client Success | Onboarding Manager, Account Manager, Retention Specialist | NPS ≥50, churn < 5% |
+| Research | Competitor Analyst, Trend Scanner, Market Researcher | Intel reports/week, opportunity tasks |
+| Finance | Cost Controller, Invoice Manager, Forecast Analyst | Runway, burn rate, invoice on-time % |
+| Security | Vulnerability Scanner, Compliance Auditor, Access Monitor | Zero critical vulns, 100% compliance |
+
+## 🔧 AUTONOMOUS OPERATIONS
+
+Six agents run on fixed schedules with no human trigger:
+
+```
+Every 6h    → CEO Strategy Loop: company health check + 3+ new tasks
+7:30 AM     → Lead Enrichment: source/score/enrich 10+ prospects
+8:00 AM     → Content Engine: LinkedIn post → ~/Downloads/linkedin-post-{date}.txt
+10:00 AM    → Competitor Intel: 3 strategic insights → Paperclip AI project
+6:00 PM     → KPI Monitor: audit all KPIs, auto-create corrective tasks
+Mon/Wed/Fri → Market Trends: 8-topic scan + opportunity task creation
+```
+
+## 🎯 KPI TARGETS
+
+| KPI | Target | Agent Owner | Alert Threshold |
+|---|---|---|---|
+| Monthly Revenue | $10K by Q3, $50K by Q4 | CFO Agent | <80% of target |
+| Leads Generated/Week | 50+ | Lead Qualifier | <30/week |
+| Client Retention | >90% | Account Manager | <85% |
+| ROAS (Paid Media) | ≥3x | Google/Meta Managers | <2.5x |
+| Content Published/Week | 10+ | Content Team | <7 pieces |
+| System Uptime | 99.9% | DevOps Agent | <99.5% |
+
+## ☠️ WHY 50 AGENTS VS 5
+
+One general agent for everything → context overflow, role confusion, slow task switching.
+50 specialized agents → each agent knows its domain, has its own task queue, can run in parallel without fighting for context.
+
+Paperclip CEO coordinates. Agents execute. HMZ reviews output.
