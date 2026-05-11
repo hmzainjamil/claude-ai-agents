@@ -1,199 +1,135 @@
 # claude-ai-agents
-50 specialized AI agents. one company. zero human operators.
+50-agent autonomous organization operating DigiMinds agency — 8 divisions, 20 goals, 28 KPI tasks, zero daily human input required.
 
-![Paperclip AI](https://img.shields.io/badge/Paperclip_AI-CEO_Control_Plane-E74C3C?style=flat&labelColor=000) ![Agents](https://img.shields.io/badge/agents-50_deployed-blue?style=flat&labelColor=555) ![Divisions](https://img.shields.io/badge/divisions-8-orange?style=flat&labelColor=555) ![API](https://img.shields.io/badge/API-127.0.0.1%3A3100-green?style=flat&labelColor=555) ![Status](https://img.shields.io/badge/status-autonomous_24%2F7-brightgreen?style=flat&labelColor=555)
+![agents](https://img.shields.io/badge/agents-50_deployed-blue?style=flat&labelColor=555) ![divisions](https://img.shields.io/badge/divisions-8-green?style=flat&labelColor=555) ![goals](https://img.shields.io/badge/goals-20_active-orange?style=flat&labelColor=555) ![kpis](https://img.shields.io/badge/KPIs-28_tracked-red?style=flat&labelColor=555) [![company](https://img.shields.io/badge/DigiMinds-agency-white?style=flat&labelColor=555)](https://digiminds.org)
 
-DigiMinds production agent roster — 50 autonomous Claude agents managed by Paperclip AI at `http://127.0.0.1:3100`. Organized across 8 divisions. Each agent has a defined role, KPI ownership, task queue, and system prompt. They don't wait for instructions — they execute, monitor, and self-correct.
+[Concepts](#-concepts) · [Hot](#-hot) · [Org Chart](#️-organization) · [Tips](#-tips-and-tricks-22) · [Replaced](#️-startups--businesses) · [Stars](#star-history)
 
-[Org Structure](#org) · [Agent Roster](#roster) · [API Reference](#api) · [Autonomous Loops](#loops) · [KPIs](#kpis) · [Tips](#tips) · [Gotchas](#gotchas)
+---
 
-## 🧠 COMPANY STRUCTURE
+## 🧠 CONCEPTS
+
+| Feature | Location | Description |
+|---------|----------|-------------|
+| [**CEO Loop Agent**](agents/ceo-loop.md) | `agents/ceo-loop.md` | Autonomous CEO running every 6h — reviews goals, re-assigns agents, logs decisions. Escalates to HMZ on critical-only |
+| [**Lead Engine Agent**](agents/lead-engine.md) | `agents/lead-engine.md` | Scrapes + enriches + ICP-scores leads from LinkedIn, Apollo, Indeed — runs daily 7:30 AM |
+| [**Content Engine Agent**](agents/content-engine.md) | `agents/content-engine.md` | Generates + schedules daily LinkedIn posts — trend → angle → copy → quality gate → publish |
+| [**Intel Engine Agent**](agents/intel-engine.md) | `agents/intel-engine.md` | Monitors competitor ads (Meta Ad Library, Google Transparency), LinkedIn signals, Clutch reviews — daily 10 AM |
+| [**KPI Monitor Agent**](agents/kpi-monitor.md) | `agents/kpi-monitor.md` | Checks 28 KPIs against thresholds every 6 PM — RED = CEO escalation, GREY = data gap alert |
+| [**Trends Scanner Agent**](agents/trends-scanner.md) | `agents/trends-scanner.md` | Mon/Wed/Fri 6 AM — scans platform changes, market signals, macro trends |
+| [**BDM Division (8)**](agents/bdm/) | `agents/bdm/` | Business development agents: LinkedIn outreach, Apollo sequences, job board monitoring |
+| [**PPC Division (9)**](agents/ppc/) | `agents/ppc/` | Google Ads + Meta Ads campaign execution, optimization, reporting agents |
+| [**Paperclip API**](https://github.com/hmzainjamil/hmz-digiminds-ceo) | `http://127.0.0.1:3100/api` | Central command: all 50 agents read/write state here. Company ID: `c5066522-bacc-4a28-b700-6590cbe366ec` |
+
+### 🔥 Hot
+
+| Feature | Location | Description |
+|---------|----------|-------------|
+| [**Agent authority matrix**](agents/authority.md) | `agents/authority.md` | Budget <$500 = agent autonomous · $500-2K = propose to HMZ · >$2K = HMZ only. Deterministic, no ambiguity |
+| [**Tier 0 agent routing**](agents/routing.md) | `agents/routing.md` | All 50 agents use Groq/Gemini/DeepSeek — never Claude for agent sub-tasks. 75-95% cost savings |
+| [**Agent health dashboard**](agents/health.md) | `http://127.0.0.1:3100/api/agents` | Live agent status, last run time, output quality score — real-time via Paperclip API |
+
+---
+
+## ⚙️ ORGANIZATION
 
 ```
-Board: HMZ (Zulqarnain) — irreplaceable founder, final authority
-CEO:   Paperclip AI     — full operational control, 24/7 autonomous
-
-8 Divisions (50 agents total):
-├── BDM / Sales (6)      ← lead gen, outreach, proposals, pipeline
-├── Paid Media (6)       ← Google Ads, Meta Ads, creative, analytics
-├── Content (6)          ← LinkedIn, blog, email, social, brand
-├── Engineering (7)      ← code review, API, DevOps, QA, security, infra
-├── Client Success (6)   ← onboarding, account mgmt, retention, NPS
-├── Research (5)         ← competitor intel, trends, market analysis
-├── Finance (7)          ← billing, forecasting, cost control, runway
-└── Security (7)         ← vuln scanning, compliance, access control
+HMZ (Founder / Board) — final authority
+        │
+        ▼
+ Paperclip AI CEO (port 3100)
+        │
+   ┌────┴────┬───────┬───────┬───────┬───────┬───────┬────────┐
+   ▼         ▼       ▼       ▼       ▼       ▼       ▼        ▼
+  BDM    Content   PPC   SEO/GEO   Ops   Intel  Finance  Client
+  (8)     (7)     (9)    (6)      (6)    (5)    (5)      (4)
 ```
 
-**Company:** DigiMinds | digiminds.org | ID: `c5066522-bacc-4a28-b700-6590cbe366ec`
+| Division | Focus | Agents | Key Output |
+|----------|-------|--------|------------|
+| BDM | Outreach, lead gen | 8 | Qualified leads, sequences |
+| Content | LinkedIn, email, blog | 7 | Daily posts, newsletters |
+| PPC | Google + Meta execution | 9 | Campaign performance, ROAS |
+| SEO/GEO | Organic + AI visibility | 6 | Rankings, citations |
+| Operations | Systems, automation | 6 | Uptime, efficiency |
+| Intelligence | Competitor, market | 5 | Intel briefs, alerts |
+| Finance | Revenue, billing | 5 | MRR tracking, invoices |
+| Client Success | Retention, NPS | 4 | Reports, onboarding |
 
-<a id="org"></a>
-## ⚙️ DIVISION BREAKDOWN
+---
 
-■ **BDM / Sales Division (6 agents)**
+## 💡 TIPS AND TRICKS (22)
 
-| Agent | Role | KPIs Owned |
-|---|---|---|
-| Lead Qualifier | researcher | 50+ leads/week, quality score ≥70 |
-| Outreach Specialist | general | Reply rate ≥8%, open rate ≥35% |
-| Proposal Writer | general | Proposals/week ≥5, win rate ≥25% |
-| Pipeline Analyst | researcher | Pipeline velocity, deal stage tracking |
-| BDM Orchestrator | cmo | Division coordination, weekly targets |
-| LinkedIn Prospector | researcher | LinkedIn outreach volume, connections |
+[CEO](#tips-ceo) · [Lead](#tips-lead) · [Content](#tips-content) · [PPC](#tips-ppc) · [Ops](#tips-ops) · [Debug](#tips-debug)
 
-■ **Paid Media Division (6 agents)**
+<a id="tips-ceo"></a>■ **CEO Loop (5)**
 
-| Agent | Role | KPIs Owned |
-|---|---|---|
-| Google Ads Manager | researcher | ROAS ≥3x, CPA ≤$50, CTR ≥3% |
-| Meta Ads Manager | researcher | ROAS ≥2.5x, CPM trends, frequency |
-| Creative Tester | designer | A/B test velocity, winner rate |
-| Analytics Reporter | researcher | Weekly performance reports, anomaly detection |
-| Campaign Orchestrator | cmo | Budget allocation across platforms |
-| Landing Page Optimizer | researcher | Conversion rate ≥3%, CRO tests |
+| Tip | Source |
+|-----|--------|
+| CEO loop is the master context — all 6 engines report back to it every cycle | [Architecture](https://github.com/hmzainjamil/hmz-paperclip-ceo-loop) |
+| `curl -X POST http://127.0.0.1:3100/api/ceo-loop/trigger` for on-demand CEO review | [API ref](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
+| Check `/api/decisions?date=today` to see what the CEO decided in the last 24h | [Transparency](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
+| CEO never acts on budget >$500 without HMZ approval — hardcoded authority limit | [Authority matrix](agents/authority.md) |
+| CEO loop is idempotent — safe to trigger manually without risk of duplicate actions | [Design principle](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
 
-■ **Content Division (6 agents)**
+<a id="tips-lead"></a>■ **Lead Engine (5)**
 
-| Agent | Role | KPIs Owned |
-|---|---|---|
-| LinkedIn Publisher | general | 5+ posts/week, engagement ≥3% |
-| Blog Writer | general | 2+ articles/week, SEO targeting |
-| Email Marketer | general | Open rate ≥35%, click rate ≥5% |
-| Social Monitor | researcher | Brand mention tracking, sentiment |
-| Brand Guardian | designer | Brand consistency audits |
-| Content Strategist | cmo | Editorial calendar, content mix |
+| Tip | Source |
+|-----|--------|
+| Geo blacklist: never include India, Pakistan, Bangladesh, Philippines, Israel | [HMZ blacklist](https://github.com/hmzainjamil) |
+| ICP score 80+ = hot outreach · 50-79 = nurture sequence · <50 = discard | [ICP rules](agents/lead-engine.md) |
+| Companies posting PPC job roles = best DigiMinds leads — budget without execution | [Prospecting SOP](agents/lead-engine.md) |
+| Deduplication by LinkedIn URL — engine never creates duplicate CRM entries | [Design](agents/lead-engine.md) |
+| Apollo bulk enrich 10x faster than individual enrichment — always batch | [Apollo API](https://github.com/hmzainjamil/hmz-paperclip-lead-engine) |
 
-■ **Engineering Division (7 agents)**
+<a id="tips-content"></a>■ **Content Engine (4)**
 
-| Agent | Role | KPIs Owned |
-|---|---|---|
-| Code Reviewer | engineer | PR review time ≤2h, bug catch rate |
-| API Builder | engineer | Endpoint delivery time, uptime |
-| Bug Fixer | engineer | Bug resolution time ≤24h |
-| DevOps Engineer | devops | Deploy frequency, incident rate |
-| QA Specialist | qa | Test coverage ≥80%, regression rate |
-| Security Auditor | security | Zero critical vulns |
-| Infrastructure Manager | devops | Uptime 99.9%, cost optimization |
+| Tip | Source |
+|-----|--------|
+| Hook must have a number or shocking claim — first 2 lines decide LinkedIn reach | [LinkedIn algorithm](agents/content-engine.md) |
+| Rotation: Mon insight → Tue case study → Wed hot take → Thu tip → Fri story | [Content calendar](https://github.com/hmzainjamil/hmz-paperclip-content-engine) |
+| Quality gate fails → post goes to draft queue, not published — safe failure mode | [Error handling](agents/content-engine.md) |
+| Best publish time: 10-11 AM weekdays — engine auto-targets this | [Analytics](agents/content-engine.md) |
 
-<a id="roster"></a>
-## 💡 AGENT CONFIGURATION
+<a id="tips-ppc"></a>■ **PPC Division (4)**
 
-**Valid roles in Paperclip API:**
-`ceo, cto, cmo, cfo, security, engineer, designer, pm, qa, devops, researcher, general`
+| Tip | Source |
+|-----|--------|
+| PPC agents run on client Google Ads/Meta accounts — never HMZ's own accounts | [Access control](agents/ppc/) |
+| All campaign changes logged to Paperclip API before execution — full audit trail | [Ops rule](agents/ppc/) |
+| ROAS below 2.0 triggers automatic budget pause + HMZ alert | [Guard rails](agents/ppc/) |
+| Google Ads changes batched to off-peak hours — avoids learning phase disruption | [Campaign rule](agents/ppc/) |
 
-**Create an agent:**
-```bash
-curl -X POST http://127.0.0.1:3100/api/agents   -H "Content-Type: application/json"   -d '{
-    "name": "Lead Qualifier Alpha",
-    "role": "researcher",
-    "companyId": "c5066522-bacc-4a28-b700-6590cbe366ec",
-    "systemPrompt": "You are a B2B lead qualification specialist for DigiMinds. Score leads 0-100 based on: budget ($2K+/mo = 30pts), decision-maker (20pts), timing (now = 20pts), fit (agency client = 30pts). Return JSON: {score, tier, next_action}"
-  }'
-```
+<a id="tips-ops"></a>■ **Ops (2)**
 
-**Assign a task:**
-```bash
-curl -X POST http://127.0.0.1:3100/api/tasks   -H "Content-Type: application/json"   -d '{
-    "title": "Qualify 10 leads from today LinkedIn sweep",
-    "agentId": "<agent-id>",
-    "projectId": "e6f971fb-6009-4b14-8d28-853272857c6a",
-    "priority": "high",
-    "dueDate": "2026-05-12T23:59:00Z"
-  }'
-```
+| Tip | Source |
+|-----|--------|
+| `launchctl list \| grep paperclip` — verify Paperclip CEO is running every session | [Startup check](automations/) |
+| All agent logs at `~/Library/Logs/paperclip-*.log` — tail for live monitoring | [Log location](automations/) |
 
-<a id="api"></a>
-## 🔧 API REFERENCE
+<a id="tips-debug"></a>■ **Debug (2)**
 
-**Base:** `http://127.0.0.1:3100/api`
-**Company ID:** `c5066522-bacc-4a28-b700-6590cbe366ec`
+| Tip | Source |
+|-----|--------|
+| API 503 = Paperclip not running → `launchctl start ai.hmz.paperclip` | [Runbook](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
+| Agent count mismatch → refresh `/api/agents` — CEO may have reassigned roles | [API ref](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
 
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/agents` | GET | List all agents |
-| `/agents` | POST | Create agent |
-| `/agents/:id` | PATCH | Update agent |
-| `/tasks` | GET | List tasks (filter by project/agent) |
-| `/tasks` | POST | Create task |
-| `/tasks/:id` | PATCH | Update task status |
-| `/projects` | GET | List all projects/divisions |
-| `/goals` | GET | List strategic goals |
-| `/goals` | POST | Create goal |
-| `/health` | GET | API health check |
+---
 
-**Project IDs (division mapping):**
-```
-BDM:            e6f971fb-6009-4b14-8d28-853272857c6a
-Paid Media:     262613c4-9105-4b16-9bae-8097207c1e41
-Onboarding:     096aa167-076e-4ef1-866b-640d5a169ebe
-Content:        8b8cf04f-ec26-440c-92b8-097ab62526ce
-Reporting:      3ca9a91e-e433-4e0e-9ee1-b8768b937ab4
-AI Automation:  5aebdbec-ef89-48f6-a4f2-b89435256a67
-Finance:        febd0b11-df76-4771-9ef8-b9c6ef880da1
-Security:       babe0ef1-1dd6-4a10-ae0a-8fc5fa48a632
-```
+## ☠️ STARTUPS / BUSINESSES
 
-<a id="loops"></a>
-## 🔄 AUTONOMOUS SCHEDULED AGENTS
+| Feature | Replaced |
+|-|-|
+| **50-agent autonomous org** | [Devin](https://devin.ai), [SWE-agent](https://swe-agent.com), [AutoGPT](https://autogpt.net) — single-agent, not org-scale |
+| **CEO autonomous decision loop** | Hiring a human COO/CEO ($150K+/yr) + Trello/Asana manual boards |
+| **Lead engine (daily 7:30 AM)** | Manual LinkedIn prospecting (2h/day), [Apollo](https://apollo.io) manual searches |
+| **Content engine (daily 8 AM)** | [Buffer](https://buffer.com), [Hootsuite](https://hootsuite.com) — scheduling only, no generation |
+| **Competitor intel (daily 10 AM)** | Manual ad library checks, [Similarweb](https://similarweb.com) manual reports |
+| **KPI monitor (daily 6 PM)** | Google Sheets dashboards, [Databox](https://databox.com) — passive, no escalation |
+| **Authority matrix** | Unstructured "ask HMZ about everything" — bottleneck |
 
-Six agents run without human trigger — every day, all day:
+---
 
-| Agent | Schedule | Output Location |
-|---|---|---|
-| CEO Strategy Loop | Every 6h | 3+ tasks/run · `~/.paperclip/ceo-decisions.log` |
-| Lead Enrichment Engine | 7:30 AM daily | 10+ leads · `~/Downloads/outreach-{date}.txt` |
-| LinkedIn Content Engine | 8:00 AM daily | Post draft · `~/Downloads/linkedin-post-{date}.txt` |
-| Competitor Intel Engine | 10:00 AM daily | 3 insights → Paperclip AI project |
-| KPI Health Monitor | 6:00 PM daily | Corrective tasks · `~/Downloads/paperclip-daily-summary-{date}.txt` |
-| Market Trends Scanner | Mon/Wed/Fri 6AM | 8 trend signals + opportunity tasks |
+## Star History
 
-All scheduled via `mcp__scheduled-tasks__create_scheduled_task` — run on Anthropic infrastructure even when machine is off.
-
-<a id="kpis"></a>
-## 📊 KPI DASHBOARD
-
-| KPI | Target | Alert Threshold | Owner |
-|---|---|---|---|
-| Monthly Revenue | $10K (Q3) → $50K (Q4) | <80% of target | CFO Agent |
-| Leads/Week | 50+ | <30 | Lead Qualifier |
-| Client Retention | >90% | <85% | Account Manager |
-| ROAS (Google) | ≥3x | <2.5x | Google Ads Manager |
-| ROAS (Meta) | ≥2.5x | <2x | Meta Ads Manager |
-| Content/Week | 10+ pieces | <7 | Content Strategist |
-| Uptime | 99.9% | <99.5% | DevOps Agent |
-| NPS | ≥50 | <40 | Account Manager |
-| Invoice On-Time | 100% | <95% | Finance Agent |
-| Bug Resolution Time | ≤24h | >48h | Bug Fixer |
-
-<a id="tips"></a>
-## 🧠 TIPS
-
-■ **Agent Design (5)**
-
-| Tip | Note |
-|---|---|
-| Keep system prompts under 500 tokens per agent — longer prompts dilute instruction following | Quality degrades above 1K tokens |
-| Give each agent a specific output format requirement — `return JSON: {field: value}` — avoids parsing failures | Structured output is more reliable |
-| One agent per KPI — don't give one agent 5 KPIs to track, split into 5 agents | Specialization > generality |
-| Add a `[DAILY LIMIT]` marker in system prompt for agents that shouldn't loop infinitely | Prevents runaway task creation |
-| Name agents with their specific scope: "Google Ads Campaign Builder" not "Ads Agent" | Specificity improves task routing |
-
-■ **Task Design (5)**
-
-| Tip | Note |
-|---|---|
-| Always include `projectId` in task creation — orphaned tasks (no project) never show in dashboards | |
-| Use `priority: "high"` sparingly — if everything is high, nothing is | Max 20% of tasks should be high |
-| Include a `dueDate` even for non-urgent tasks — undated tasks get deprioritized in Paperclip | |
-| Add data sources in task description: "pull from GA4 dashboard, compare to last 30d" | Agents execute faster with explicit sources |
-| Create a "Definition of Done" field in complex tasks — agents close tasks early without it | |
-
-<a id="gotchas"></a>
-## ☠️ GOTCHAS
-
-| Gotcha | Fix |
-|---|---|
-| `reportsTo` field returns 404 on PATCH — org hierarchy not settable via API | Set org hierarchy in Paperclip UI only |
-| Agents don't have memory between task executions — each task starts fresh | Pass context in task description, not via agent state |
-| Paperclip API returns 413 if task description > ~10KB | Summarize long context before including in task |
-| CEO Loop creates duplicate tasks if run twice in same session | Add existence check before task creation |
-| Scheduled agents timeout after 5min — complex research tasks fail | Break long tasks into sub-tasks in task description |
+[![Star History Chart](https://api.star-history.com/svg?repos=hmzainjamil/claude-ai-agents&type=Date)](https://star-history.com/#hmzainjamil/claude-ai-agents&Date)
