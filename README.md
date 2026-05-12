@@ -1,134 +1,113 @@
 # claude-ai-agents
-50-agent autonomous organization operating DigiMinds agency — 8 divisions, 20 goals, 28 KPI tasks, zero daily human input required.
+Specialized Claude sub-agents — parallelized, cost-routed, domain-expert AI workers.
 
-![agents](https://img.shields.io/badge/agents-50_deployed-blue?style=flat&labelColor=555) ![divisions](https://img.shields.io/badge/divisions-8-green?style=flat&labelColor=555) ![goals](https://img.shields.io/badge/goals-20_active-orange?style=flat&labelColor=555) ![kpis](https://img.shields.io/badge/KPIs-28_tracked-red?style=flat&labelColor=555) [![company](https://img.shields.io/badge/DigiMinds-agency-white?style=flat&labelColor=555)](https://digiminds.org)
+![agents](https://img.shields.io/badge/agents-20%2B-blue?style=flat&labelColor=555)
+![tier0](https://img.shields.io/badge/routing-Tier0%20first-orange?style=flat&labelColor=555)
+![parallel](https://img.shields.io/badge/execution-parallel-green?style=flat&labelColor=555)
+![platform](https://img.shields.io/badge/platform-Claude%20Code-lightgrey?style=flat&labelColor=555)
+![license](https://img.shields.io/badge/license-MIT-blue?style=flat&labelColor=555)
 
-[Concepts](#-concepts) · [Hot](#-hot) · [Org Chart](#️-organization) · [Tips](#-tips-and-tricks-22) · [Replaced](#️-startups--businesses) · [Stars](#star-history)
-
----
+[Concepts](#-concepts) · [Architecture](#️-architecture) · [Tips](#-tips-and-tricks-20) · [Kills](#️-startups--businesses) · [Stars](#star-history)
 
 ## 🧠 CONCEPTS
 
 | Feature | Location | Description |
 |---------|----------|-------------|
-| [**CEO Loop Agent**](agents/ceo-loop.md) | `agents/ceo-loop.md` | Autonomous CEO running every 6h — reviews goals, re-assigns agents, logs decisions. Escalates to HMZ on critical-only |
-| [**Lead Engine Agent**](agents/lead-engine.md) | `agents/lead-engine.md` | Scrapes + enriches + ICP-scores leads from LinkedIn, Apollo, Indeed — runs daily 7:30 AM |
-| [**Content Engine Agent**](agents/content-engine.md) | `agents/content-engine.md` | Generates + schedules daily LinkedIn posts — trend → angle → copy → quality gate → publish |
-| [**Intel Engine Agent**](agents/intel-engine.md) | `agents/intel-engine.md` | Monitors competitor ads (Meta Ad Library, Google Transparency), LinkedIn signals, Clutch reviews — daily 10 AM |
-| [**KPI Monitor Agent**](agents/kpi-monitor.md) | `agents/kpi-monitor.md` | Checks 28 KPIs against thresholds every 6 PM — RED = CEO escalation, GREY = data gap alert |
-| [**Trends Scanner Agent**](agents/trends-scanner.md) | `agents/trends-scanner.md` | Mon/Wed/Fri 6 AM — scans platform changes, market signals, macro trends |
-| [**BDM Division (8)**](agents/bdm/) | `agents/bdm/` | Business development agents: LinkedIn outreach, Apollo sequences, job board monitoring |
-| [**PPC Division (9)**](agents/ppc/) | `agents/ppc/` | Google Ads + Meta Ads campaign execution, optimization, reporting agents |
-| [**Paperclip API**](https://github.com/hmzainjamil/hmz-digiminds-ceo) | `http://127.0.0.1:3100/api` | Central command: all 50 agents read/write state here. Company ID: `c5066522-bacc-4a28-b700-6590cbe366ec` |
+| [**Explore Agent**](agents/explore) | `agents/explore` | Fast codebase explorer — Glob/Grep/Read without modifying files [![read-only](https://img.shields.io/badge/mode-read--only-yellow?style=flat&labelColor=555)] |
+| [**Plan Agent**](agents/plan) | `agents/plan` | Software architect — designs implementation strategy, identifies critical files |
+| [**General Purpose**](agents/general-purpose) | `agents/general-purpose` | Multi-step research + execution with full tool access |
+| [**Ads Strategy Agent**](agents/ads-strategy) | `agents/ads-strategy` | Google/Meta/PPC campaign planning — ROAS focus |
+| [**SEO Agent**](agents/seo) | `agents/seo` | Technical + content SEO — E-E-A-T, schema, crawlability |
+| [**Legal Agent**](agents/legal) | `agents/legal` | Contract review, compliance checks, NDA triage |
+| [**Market Research Agent**](agents/market-research) | `agents/market-research` | Competitor intel, trend analysis, audience mapping |
+| [**Code Review Agent**](agents/code-review) | `agents/code-review` | Security-first review — OWASP top 10, performance, maintainability |
+| [**Nimble Researcher**](agents/nimble-researcher) | `agents/nimble-researcher` | Fast data gathering — parallel searches, structured results |
+| [**Nimble Analyst**](agents/nimble-analyst) | `agents/nimble-analyst` | Deep synthesis — cross-reference data, strategic assessment |
 
 ### 🔥 Hot
 
 | Feature | Location | Description |
 |---------|----------|-------------|
-| [**Agent authority matrix**](agents/authority.md) | `agents/authority.md` | Budget <$500 = agent autonomous · $500-2K = propose to HMZ · >$2K = HMZ only. Deterministic, no ambiguity |
-| [**Tier 0 agent routing**](agents/routing.md) | `agents/routing.md` | All 50 agents use Groq/Gemini/DeepSeek — never Claude for agent sub-tasks. 75-95% cost savings |
-| [**Agent health dashboard**](agents/health.md) | `http://127.0.0.1:3100/api/agents` | Live agent status, last run time, output quality score — real-time via Paperclip API |
+| [**Paperclip CEO Loop**](agents/paperclip-ceo-loop) | `agents/paperclip-ceo-loop` | Autonomous business operations agent — DigiMinds AI CEO at 127.0.0.1:3100 |
+| [**All-Agents Orchestrator**](agents/all-agents) | `agents/all-agents` | Meta-agent — spawns and coordinates all domain agents in parallel |
+| [**BDM Agent**](agents/bdm) | `agents/bdm` | Business development — LinkedIn + Indeed pipeline, cover letters, outreach |
 
----
-
-## ⚙️ ORGANIZATION
+## ⚙️ ARCHITECTURE
 
 ```
-HMZ (Founder / Board) — final authority
-        │
-        ▼
- Paperclip AI CEO (port 3100)
-        │
-   ┌────┴────┬───────┬───────┬───────┬───────┬───────┬────────┐
-   ▼         ▼       ▼       ▼       ▼       ▼       ▼        ▼
-  BDM    Content   PPC   SEO/GEO   Ops   Intel  Finance  Client
-  (8)     (7)     (9)    (6)      (6)    (5)    (5)      (4)
+Agent execution model:
+  User Prompt
+      │
+      ▼
+  Orchestrator (Claude Sonnet — conversation layer only)
+      │
+      ├─── Explore Agent ─── Tier 0 (Groq/Gemini) ──→ file analysis
+      ├─── Research Agent ── Tier 0 (DeepSeek) ────→ web research
+      ├─── Code Agent ────── Tier 0 (GPT-4o-mini) →  code generation
+      └─── Synthesis ──────── Claude (final layer) →  output to user
 ```
 
-| Division | Focus | Agents | Key Output |
-|----------|-------|--------|------------|
-| BDM | Outreach, lead gen | 8 | Qualified leads, sequences |
-| Content | LinkedIn, email, blog | 7 | Daily posts, newsletters |
-| PPC | Google + Meta execution | 9 | Campaign performance, ROAS |
-| SEO/GEO | Organic + AI visibility | 6 | Rankings, citations |
-| Operations | Systems, automation | 6 | Uptime, efficiency |
-| Intelligence | Competitor, market | 5 | Intel briefs, alerts |
-| Finance | Revenue, billing | 5 | MRR tracking, invoices |
-| Client Success | Retention, NPS | 4 | Reports, onboarding |
+| Agent Type | Default Model | Fallback | Use Case |
+|-----------|--------------|---------|---------|
+| Explore | Groq Llama 3 | Gemini Flash | Read-only codebase scan |
+| Research | DeepSeek-V3 | Groq | Web fetch + analysis |
+| Code | GPT-4o-mini | Ollama CodeLlama | Generation + debug |
+| Legal | Claude Haiku | GPT-4o-mini | Contract review |
+| Final Output | Claude Sonnet | — | User-facing synthesis |
 
----
+## 💡 TIPS AND TRICKS (20)
 
-## 💡 TIPS AND TRICKS (22)
+[parallel](#tips-parallel) · [routing](#tips-routing) · [prompting](#tips-prompting) · [tools](#tips-tools)
 
-[CEO](#tips-ceo) · [Lead](#tips-lead) · [Content](#tips-content) · [PPC](#tips-ppc) · [Ops](#tips-ops) · [Debug](#tips-debug)
-
-<a id="tips-ceo"></a>■ **CEO Loop (5)**
+<a id="tips-parallel"></a>■ **Parallel Execution (5)**
 
 | Tip | Source |
 |-----|--------|
-| CEO loop is the master context — all 6 engines report back to it every cycle | [Architecture](https://github.com/hmzainjamil/hmz-paperclip-ceo-loop) |
-| `curl -X POST http://127.0.0.1:3100/api/ceo-loop/trigger` for on-demand CEO review | [API ref](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
-| Check `/api/decisions?date=today` to see what the CEO decided in the last 24h | [Transparency](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
-| CEO never acts on budget >$500 without HMZ approval — hardcoded authority limit | [Authority matrix](agents/authority.md) |
-| CEO loop is idempotent — safe to trigger manually without risk of duplicate actions | [Design principle](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
+| Launch independent agents in a single message — one `<tool_calls>` block with N agents | [HMZ](https://github.com/hmzainjamil) |
+| Use `run_in_background=true` for research agents while doing other work | [HMZ](https://github.com/hmzainjamil) |
+| Foreground agents: when you need results before next step. Background: fire-and-forget | [HMZ](https://github.com/hmzainjamil) |
+| Batch 3-5 Groq calls simultaneously — Groq free tier = 30 req/min, use it all | [Groq](https://console.groq.com) |
+| Agent context is isolated — pass only what the agent needs, not full conversation | [HMZ](https://github.com/hmzainjamil) |
 
-<a id="tips-lead"></a>■ **Lead Engine (5)**
-
-| Tip | Source |
-|-----|--------|
-| Geo blacklist: never include India, Pakistan, Bangladesh, Philippines, Israel | [HMZ blacklist](https://github.com/hmzainjamil) |
-| ICP score 80+ = hot outreach · 50-79 = nurture sequence · <50 = discard | [ICP rules](agents/lead-engine.md) |
-| Companies posting PPC job roles = best DigiMinds leads — budget without execution | [Prospecting SOP](agents/lead-engine.md) |
-| Deduplication by LinkedIn URL — engine never creates duplicate CRM entries | [Design](agents/lead-engine.md) |
-| Apollo bulk enrich 10x faster than individual enrichment — always batch | [Apollo API](https://github.com/hmzainjamil/hmz-paperclip-lead-engine) |
-
-<a id="tips-content"></a>■ **Content Engine (4)**
+<a id="tips-routing"></a>■ **Cost Routing (5)**
 
 | Tip | Source |
 |-----|--------|
-| Hook must have a number or shocking claim — first 2 lines decide LinkedIn reach | [LinkedIn algorithm](agents/content-engine.md) |
-| Rotation: Mon insight → Tue case study → Wed hot take → Thu tip → Fri story | [Content calendar](https://github.com/hmzainjamil/hmz-paperclip-content-engine) |
-| Quality gate fails → post goes to draft queue, not published — safe failure mode | [Error handling](agents/content-engine.md) |
-| Best publish time: 10-11 AM weekdays — engine auto-targets this | [Analytics](agents/content-engine.md) |
+| Sub-agents NEVER use Claude — always Tier 0 (Groq, Gemini, DeepSeek, GPT-4o-mini) | [HMZ](https://github.com/hmzainjamil) |
+| `llm-burst` CLI routes to cheapest available cloud model automatically | [HMZ](https://github.com/hmzainjamil) |
+| Ollama local agents cost $0 — use for any task that doesn't need internet | [HMZ](https://github.com/hmzainjamil) |
+| Kimi K2.5 at $0.15/1M input is the best Opus replacement for long-context tasks | [Moonshot](https://platform.moonshot.cn) |
+| Always caveman-compress agent outputs before returning to orchestrator | [HMZ](https://github.com/hmzainjamil) |
 
-<a id="tips-ppc"></a>■ **PPC Division (4)**
-
-| Tip | Source |
-|-----|--------|
-| PPC agents run on client Google Ads/Meta accounts — never HMZ's own accounts | [Access control](agents/ppc/) |
-| All campaign changes logged to Paperclip API before execution — full audit trail | [Ops rule](agents/ppc/) |
-| ROAS below 2.0 triggers automatic budget pause + HMZ alert | [Guard rails](agents/ppc/) |
-| Google Ads changes batched to off-peak hours — avoids learning phase disruption | [Campaign rule](agents/ppc/) |
-
-<a id="tips-ops"></a>■ **Ops (2)**
+<a id="tips-prompting"></a>■ **Agent Prompting (5)**
 
 | Tip | Source |
 |-----|--------|
-| `launchctl list \| grep paperclip` — verify Paperclip CEO is running every session | [Startup check](automations/) |
-| All agent logs at `~/Library/Logs/paperclip-*.log` — tail for live monitoring | [Log location](automations/) |
+| Tell agent whether to write code or just research — ambiguity wastes tokens | [HMZ](https://github.com/hmzainjamil) |
+| Include 3-5 word description in Agent tool call — shows in user-visible output | [HMZ](https://github.com/hmzainjamil) |
+| Subagent_type=Explore for codebase scans — specialized, faster than general-purpose | [HMZ](https://github.com/hmzainjamil) |
+| Provide complete task description — agent starts fresh with no prior context | [HMZ](https://github.com/hmzainjamil) |
+| Use isolation=worktree for agents making code changes — prevents branch conflicts | [HMZ](https://github.com/hmzainjamil) |
 
-<a id="tips-debug"></a>■ **Debug (2)**
+<a id="tips-tools"></a>■ **Tool Selection (5)**
 
 | Tip | Source |
 |-----|--------|
-| API 503 = Paperclip not running → `launchctl start ai.hmz.paperclip` | [Runbook](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
-| Agent count mismatch → refresh `/api/agents` — CEO may have reassigned roles | [API ref](https://github.com/hmzainjamil/hmz-digiminds-ceo) |
-
----
+| Explore agent uses Glob/Grep — never Agent tool for simple file searches | [HMZ](https://github.com/hmzainjamil) |
+| code-review-graph MCP before Grep/Glob for codebase exploration — semantic search | [HMZ](https://github.com/hmzainjamil) |
+| Apify MCP for all web data extraction — no Claude tokens consumed | [Apify](https://apify.com) |
+| Use WebSearch → WebFetch pipeline: search for URLs, then fetch specific pages | [HMZ](https://github.com/hmzainjamil) |
+| Plan agent returns step-by-step plans — use before any non-trivial implementation | [HMZ](https://github.com/hmzainjamil) |
 
 ## ☠️ STARTUPS / BUSINESSES
 
 | Feature | Replaced |
 |-|-|
-| **50-agent autonomous org** | [Devin](https://devin.ai), [SWE-agent](https://swe-agent.com), [AutoGPT](https://autogpt.net) — single-agent, not org-scale |
-| **CEO autonomous decision loop** | Hiring a human COO/CEO ($150K+/yr) + Trello/Asana manual boards |
-| **Lead engine (daily 7:30 AM)** | Manual LinkedIn prospecting (2h/day), [Apollo](https://apollo.io) manual searches |
-| **Content engine (daily 8 AM)** | [Buffer](https://buffer.com), [Hootsuite](https://hootsuite.com) — scheduling only, no generation |
-| **Competitor intel (daily 10 AM)** | Manual ad library checks, [Similarweb](https://similarweb.com) manual reports |
-| **KPI monitor (daily 6 PM)** | Google Sheets dashboards, [Databox](https://databox.com) — passive, no escalation |
-| **Authority matrix** | Unstructured "ask HMZ about everything" — bottleneck |
-
----
+| **Parallel Sub-Agent System** | [CrewAI](https://crewai.com), [AutoGen](https://github.com/microsoft/autogen), [LangGraph](https://langgraph.com) |
+| **Cost-Routed Agent Execution** | [LangChain](https://langchain.com), [LlamaIndex](https://llamaindex.ai) |
+| **Domain Expert Agents** | [Relevance AI](https://relevanceai.com), [AgentOps](https://agentops.ai) |
+| **BDM / Outreach Agent** | [Apollo.io](https://apollo.io), [Outreach](https://outreach.io), [Salesloft](https://salesloft.com) |
+| **CEO Loop / Autopilot** | [Lindy AI](https://lindy.ai), [Beam AI](https://beam.ai), [Artisan](https://artisan.co) |
 
 ## Star History
 
